@@ -1,0 +1,27 @@
+<% provide(:title, @user.name) %>
+<div class="row">
+    <div class="row">
+      <div class="col-sm-3"><!--left col-->
+              
+          <ul class="list-group">
+            <li class="list-group-item text-muted">Profile</li>
+             <li class="list-group-item text-right"><span class="pull-left"><strong>Name: </strong></span><%= @user.name %></li>
+           
+               <li class="list-group-item text-right"><span class="pull-left"><strong>Company</strong></span>
+                <%= @user.domain_name if domain_registered? %>
+
+            </li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Joined</strong></span><%= time_ago_in_words(@user.created_at) %> ago.</li>
+
+            <% if !@user.last_sign_in_at.nil? %>
+              <li class="list-group-item text-right">
+              <span class="pull-left"><strong>Active</strong></span>
+              <%= time_ago_in_words(@user.last_sign_in_at)  %> ago.
+              </li>
+            <% end %>
+          </ul> 
+         </div>
+     
+        </div>
+
+  </div>

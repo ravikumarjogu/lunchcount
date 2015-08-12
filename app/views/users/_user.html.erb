@@ -1,0 +1,15 @@
+<li>
+  <%= link_to user.name, user %>
+  <%= "(Admin)" if user.admin? %> 
+  <% unless current_user?(user) %>
+        <% if user.admin? %>
+          <%= link_to "(Change)", :controller => "users", :action => "moduser", :id => user.id %>
+        <% else %>
+          <%= link_to "(Change)", :controller => "users", :action => "modadmin", :id => user.id %>
+        <% end %>
+        
+          | <%= link_to "delete", user, method: :delete, data: {confirm: "You sure?"} %>
+    <% end %>
+
+  
+</li>

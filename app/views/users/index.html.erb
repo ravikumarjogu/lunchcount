@@ -1,0 +1,10 @@
+<% provide(:title, "All Users") %>
+
+<%= link_to "Back", :back %>
+
+<%= will_paginate %>
+<ul class="users">
+    <%= render @users %>
+</ul>
+
+<%= will_paginate %>

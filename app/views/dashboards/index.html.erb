@@ -1,0 +1,7 @@
+<% provide(:title, current_user.name) %>
+<%= render 'dashboards/profile' %>
+<% if current_user.admin? %>
+  <%= render 'dashboards/admin' %>
+<% else %>
+  <%= render 'dashboards/user' %>
+<% end %>

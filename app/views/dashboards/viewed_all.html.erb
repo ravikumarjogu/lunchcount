@@ -1,0 +1,31 @@
+<% provide(:title, "All Orders") %>
+  <%= render 'dashboards/profile' %>
+  
+  <div class="col-sm-9">
+  <h5 id="to_date"><%= @date %></h5>
+<%= @domain_name || "All" %>
+        <%= "(#{@all.count})" %><br>
+
+  <table class="table table-hover">
+    <thead>
+      <th>Name
+      </th>
+      <th>Lunch Status
+      </th>
+      <th>Company
+      </th>
+    </thead>
+    <tbody>
+        <% @all.each do |user| %>
+          <tr>
+              <td><%= link_to user.name, user %></td>
+              <% cls = "#{user.id}" %>
+              <td><button class=<%= cls %> type="button">Cancel</button></td>
+            <td><%= user.domain_name %></td>
+          </tr>
+        <% end %>
+  </tbody>
+  </table>
+  </div>
+</div>
+</div>

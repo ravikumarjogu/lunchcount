@@ -1,0 +1,51 @@
+<% params[:date] = "" unless !params[:date].nil? %>
+<div class="col-sm-9">
+  <div class="col-sm-12">
+  <div class="col-sm-4"> 
+ <%= form_tag(get4day_path, :method => 'post') do  %>
+        <%= text_field_tag "date" %>
+        <%= submit_tag "Check now", class: "btn btn-primary" %>
+ <% end %>
+  </div>
+  <div class="col-sm-23">
+    <- Click to select Date
+  </div>
+  </div>
+<h2 style="font-size: 1.2em"> Company wise list lunch orders: <b><%= @date %></b></h2>
+<br>
+
+
+<% totCnt = 0 %>
+<% if @dom_cil.count > 0 %>
+  <table class="table table-hover" >
+  <thead>
+    <tr>
+      <th>Company</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <% @dom_cil.each do |company, count| %>
+      <tr>
+      <td>
+      <%= link_to company, 
+      :controller => "dashboards", 
+      :action => "domain_wise",
+      :domain_name => "#{company}",
+      :date => js_date(@date)
+       %> 
+       </td>
+       <td> <%= count %>
+      <% totCnt += count %>
+      </td>
+      </tr>
+  <% end %>
+  </table>
+
+  <b>Total orders: <%= totCnt %></b> <%= link_to " ( View All members)", :controller => "dashboards", :action => "view_all", :date => js_date(@date) %>
+
+<% else %>
+  <b>Lunch orders are empty on this day. </b>* no lunches on weekends
+<% end %>
+</div>
+
+</div>

@@ -1,0 +1,165 @@
+# Place all the behaviors and hooks related to the matching controller here.
+# All this logic will automatically be available in application.js.
+# You can use CoffeeScript in this file: http://coffeescript.org/
+
+
+$(document).on 'ready page:load', ->
+  $('#calendar').fullCalendar
+    header:
+      left: 'prev'
+      center: 'title'
+      right: 'today next'
+    defaultView: 'month'
+    height: 500
+    slotMinutes: 15
+    eventColor: '#378006' 
+    events: '/lunch_orders/get_events'
+    dayRender: (date,cell) ->
+      toDay = moment().format("YYYY-MM-DD")
+      modDate = moment(date).format("YYYY-MM-DD")
+      if moment().diff(modDate,toDay) > 86400000
+        weekends=date.weekday()
+        if weekends == 0 || weekends == 6
+        else
+          cell.css "background-color", "grey"
+          $('.fc-day[data-date= \'+ modDate +\' ]').append "<div class=\'btn-group btn-toggle\'><button class=\'btn btn-default\' data-toggle=\'collapse\' data-target=\'#collapsible\'>Open</button><button class=\'btn btn-primary active\' data-toggle=\'collapse\' data-target=\'#collapsible\'>Close</button></div>"
+
+      return
+    eventClick: (calEvent, jsEvent, view) ->     
+      toDay = moment().format("YYYY-MM-DD")
+      date=moment(calEvent._start).format("YYYY-MM-DD")
+      if moment().diff(date,toDay) > 86400000
+        $(".alertMsg").css "background-color", "red"
+        $(".alertMsg").text ("You cant modify previous dates")
+        setTimeout('$(".alertMsg").hide()',1500)
+        $(".alertMsg").show()     
+      else
+        $.ajax
+              url: '/lunch_orders/drop_order'
+              type: 'GET'
+              data:
+                id: calEvent.id
+              success: (resp) ->
+                $(".alertMsg").css "background-color", "green"
+                $(".alertMsg").text ("Lunch removed successfully...")
+                setTimeout('$(".alertMsg").hide()',1500)
+                $(".alertMsg").show()
+                $('#calendar').fullCalendar 'refetchEvents'
+                return
+              error: (resp) ->
+                $(".alertMsg").css "background-color", "orange"
+                $(".alertMsg").text ("Please click on the 'Yes' ")
+                setTimeout('$(".alertMsg").hide()',1500)
+                $(".alertMsg").show()
+                return
+      return
+    eventRender: (event, element, view) ->
+        dateOfEvent=moment(event.start).format("YYYY-MM-DD")
+        return
+    dayClick: (date, jsEvent, view) ->
+      toDay = moment().format("YYYY-MM-DD")
+      modDate = moment(date).format("YYYY-MM-DD")
+      if moment().diff(modDate,toDay) < 86400000
+        weekends=date.weekday()
+        if weekends == 0 || weekends == 6
+          $(".alertMsg").css "background-color", "orange"
+          $(".alertMsg").text ("No information on weekends")
+          setTimeout('$(".alertMsg").hide()',1500)
+          $(".alertMsg").show()
+        else
+          $.ajax
+            url: '/lunch_orders/put_order'
+            type: 'GET'
+            data:
+              date: modDate
+            success: (resp) ->
+              $(".alertMsg").css "background-color", "green"
+              $(".alertMsg").text ("Lunch created")
+              setTimeout('$(".alertMsg").hide()',1500)
+              $(".alertMsg").show()
+              $('#calendar').fullCalendar 'refetchEvents'
+              return
+            error: (resp) ->
+              $(".alertMsg").css "background-color", "orange"
+              $(".alertMsg").text ("Click on the 'Yes'")
+              setTimeout('$(".alertMsg").hide()',1500)
+              $(".alertMsg").show()
+              return
+      else
+        $(".alertMsg").css "background-color", "red"
+        $(".alertMsg").text ("You cant modify previous dates")
+        setTimeout('$(".alertMsg").hide()',1500)
+        $(".alertMsg").show()
+      $('#calendar').fullCalendar 'dayRender'
+      $('#calendar').fullCalendar 'unselect'
+      return
+      
+  return
+
+
+
+/*
+
+
+ $(".fc-day[data-date = " + modDate + "]").append("<button>there..</button>")
+
+
+*/
+
+/*
+
+dayRender: (date,cell) ->
+      toDay = moment().format("YYYY-MM-DD")
+      modDate = moment(date).format("YYYY-MM-DD")
+      if moment().diff(modDate,toDay) > 86400000
+        weekends=date.weekday()
+        if weekends == 0 || weekends == 6
+        else
+          cell.css "background-color", "grey"
+      return
+    
+
+*/
+
+/*
+
+
+$('#calendar').fullCalendar 'clientEvents', (event) ->
+        event = moment(event.start).format("YYYY-MM-DD")
+        alert event + '' + modDate
+        if event == modDate
+          cnt++
+        return
+      
+
+
+
+
+
+*/
+
+/* style on weekends */
+
+$('.fc-content-skeleton table tbody tr td').css 'background-color', 'red'
+            
+
+            eventAfterAllRender: (view) ->
+      $('td:not([class])').append '<a class=\'fc-day-grid-event fc-h-event fc-event fc-start fc-end notSelect\' ><div class=\'fc-content\'> <span class=\'fc-title\'>No</span></div></a>'
+      return
+
+
+
+.fc-event-skin{
+  background-color: red;
+  border-color: #36c;
+  color: #fff;
+}
+
+
+      $('.fc-event').css 'background-color', ''
+
+
+      <%= link_to "Cancel", { controller: "dashboards", action: "user_lunch_cancel" }, :date => params[:date], :domain_name => @domain_name, :id => user.id, :data => {confirm: "You sure?"} %>
+
+
+          alert(typeof $(this).attr('class'))
