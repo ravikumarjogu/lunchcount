@@ -5,5 +5,5 @@ It's a very good reference to use following gems:
  # Devise: for authentication
  # Amniouth: for google sign up
  
-You can also find it at http://lunchcount.heroku.com/
+You can also find it at http://lunchcount.herokuapp.com/
 
